@@ -1,13 +1,13 @@
 package krzysztof.Logger;
 
-/**
- * Hello world!
- *
- */
+import krzysztof.Logger.DBconnector.DBconnectorPostgreSql;
+
+
 public class App 
 {
-    public static void main( String[] args )
-    {
-        System.out.println( "Hello World!" );
+    public static void main( String[] args ) {
+
+        DBconnectorPostgreSql db = new DBconnectorPostgreSql();
+        db.openDataBase();
     }
 }

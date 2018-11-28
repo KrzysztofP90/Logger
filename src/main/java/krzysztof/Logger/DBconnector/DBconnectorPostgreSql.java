@@ -1,18 +1,24 @@
 package krzysztof.Logger.DBconnector;
 
+import javax.imageio.IIOException;
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class DBconnectorPostgreSql {
+public class DBconnectorPostgreSql implements DBConnector {
+
+
 
     public Connection openDataBase() {
 
         Connection connection = null;
-        try {
+        String[] arrayOfLoginData = getDataBaseLogData("dataBaseLoginData.csv");
 
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/guestBook", "Krzysztof", "webhardcore");
+        try {
+            connection = DriverManager.getConnection(arrayOfLoginData[0], arrayOfLoginData[1], arrayOfLoginData[2]);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName() + ": " + e.getMessage());
@@ -22,10 +28,26 @@ public class DBconnectorPostgreSql {
         return connection;
     }
 
-    private String[] getDataBaseLogData(String filePath) {
-        FileReader fileReader = new FileReader();
-        BufferedReader bf = new BufferedReader();
 
+
+    private String[] getDataBaseLogData(String filePath) {
+
+        FileReader fileReader = null;
+        try {
+            fileReader = new FileReader("dataBaseLoginData.csv");
+        } catch(FileNotFoundException   e) {
+            e.printStackTrace();
+            System.out.println("You havent't file with data for login to data base!");
+        }
+        BufferedReader bf = new BufferedReader(fileReader);
+        String data = "";
+        try{
+            data = bf.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("File is incorrect!");
+        }
+        return data.split(",");
     }
 
 
