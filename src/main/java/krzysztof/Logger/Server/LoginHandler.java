@@ -2,19 +2,24 @@ package krzysztof.Logger.Server;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import krzysztof.Logger.Controller.BasicUserController;
 
 import java.io.*;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class LoginHandler implements HttpHandler {
+
+
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
         String response = "";
         String method = httpExchange.getRequestMethod();
+
 
 
         if(method.equals("GET")){
@@ -35,21 +40,46 @@ public class LoginHandler implements HttpHandler {
 
         // If the form was submitted, retrieve it's content.
         if(method.equals("POST")){
-            InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            String formData = br.readLine();
 
-            System.out.println(formData);
-            Map inputs = parseFormData(formData);
+                InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                String formData = br.readLine();
 
 
+                Map inputs = parseFormData(formData);
 
-            response = "<html><body>" +
-                    "<h1>You've logged, "+ inputs.get("name") + " !<br></h1>" +
-                    "  <br><input type=\"submit\" value=\"Log out!\">\n" +
-                    "</body><html>";
+                String name = inputs.get("name").toString();
+                String password = inputs.get("password").toString();
+
+
+                BasicUserController controller = new BasicUserController();
+                boolean verification = controller.evaluateLoginAndPassword(name, password);
+                if (verification) {
+                    response = "<html><body>" +
+                            "<h1>You've logged,hello "+ inputs.get("name") + " !<br></h1>" +
+                            "  <br><a href='http://localhost:7000/login' target='self'><input type='submit' Value='Log out!'></a>"+
+
+                            "</body><html>";
+                }
+                if(!verification) {
+                    response = "<html><body>" +
+                            "<h1>Bad login or password! <br></h1>" +
+                            "  <br><a href='http://localhost:7000/login' target='self'><input type='submit' Value='Try again!'></a>"+
+                            "</body><html>";
+                }
+            }
+
+
+        try {
+            sendResponse(httpExchange, response);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error! Check Your internet connection!");
         }
+    }
 
+
+    private void sendResponse(HttpExchange httpExchange, String response) throws IOException {
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
