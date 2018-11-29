@@ -5,7 +5,7 @@ import krzysztof.Logger.DAO.DaoUserDataPostgreSql;
 
 import java.util.Map;
 
-public class BasicUserController {
+public class BasicUserController implements UserController{
 
     DaoUserData dao;
 
