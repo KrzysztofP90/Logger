@@ -30,14 +30,14 @@ public class LoginHandler implements HttpHandler {
 
             if (cookie.isPresent()) {
                  String sessionId = cookie.get().getValue().replaceAll("\"", "");
-                response = "<html><body>" +
+                response = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"static/styles.css\"></head><body>" +
                         "<h1>You've logged,hello "+ sessionIdLoginMap.get(sessionId) + " !<br></h1>" +
                         "  <br><a href='http://localhost:7000/login' target='self'><input type='submit' Value='Log out!'></a>"+
 
                         "</body><html>";
             }
             else {
-                response = "<html><body>" +
+                response = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"static/styles.css\"></head><body>" +
                         "<form method=\"POST\">\n" +
                         "<h1>Log In!</h1><br><br>\n" +
                         "  Login:<br>\n" +
@@ -84,7 +84,7 @@ public class LoginHandler implements HttpHandler {
 
                 if (verification) {
 
-                    response = "<html><body>" +
+                    response = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"static/styles.css\"></head><body>" +
                             "<h1>You've logged,hello " + inputs.get("name") + " !<br></h1>" +
                             "  <br><a href='http://localhost:7000/login' target='self'><input type='submit' Value='Log out!'></a>" +
 
@@ -97,7 +97,7 @@ public class LoginHandler implements HttpHandler {
                 }
 
                 if (!verification) {
-                    response = "<html><body>" +
+                    response = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"static/styles.css\"></head><body>" +
                             "<h1>Bad login or password! <br></h1>" +
                             "  <br><a href='http://localhost:7000/login' target='self'><input type='submit' Value='Try again!'></a>" +
                             "</body><html>";
